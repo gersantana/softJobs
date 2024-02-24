@@ -1,23 +1,13 @@
 
 const router = require('express').Router()
-const {getQuery} = require('../dataBase/querys/querys')
-const {reportarConsulta} = require('../middlewares/index')
+const { reportarConsultaMiddleWare, validacionesNuevoUsuario, validacionesVerificarUsuario } = require('../middlewares/index')
+const { nuevoUsuarioController, verificarCredencialesController, getUsuarioTokenController } = require('../controllers/index')
 
+router.post('/usuarios', validacionesNuevoUsuario, reportarConsultaMiddleWare, nuevoUsuarioController)
 
-// router.post('/usuarios')
+router.post('/login', reportarConsultaMiddleWare, validacionesVerificarUsuario, verificarCredencialesController)
 
-// router.post('/login')
-
-router.get('/usuarios',reportarConsulta, async ( req,res) => {
-    try {
-        const getUsers = await getQuery()
-        res.status(200).send({
-           users: getUsers.rows
-        })
-    } catch (error) {
-        console.log(error)
-    }
-})
+router.get('/usuarios',reportarConsultaMiddleWare, getUsuarioTokenController )
 
 //mensaje si no hay coincidencias con las rutas anteriores
 router.get("*", (req, res) => {
